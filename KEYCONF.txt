@@ -1,0 +1,5 @@
+ClearPlayerClasses 
+addplayerclass "Survivor"
+
+weaponsection Survivor
+setslot 1 Flashlight KillerAxe

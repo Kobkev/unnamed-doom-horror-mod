@@ -1,0 +1,27 @@
+// Doors
+brightmap texture DRDOOR10 { map "Textures/Brightmaps/DRDOOR10.png" disablefullbright }
+brightmap texture DRDOOR13 { map "Textures/Brightmaps/DRDOOR13.png" disablefullbright }
+
+//Crates
+brightmap texture SS2_0189 { map "Textures/Brightmaps/SS2_0189.png" disablefullbright }
+
+//Forcefield
+brightmap texture FFLDR_01 { map "Textures/Brightmaps/FFLDR_01.png" disablefullbright }
+brightmap texture FFLDR_02 { map "Textures/Brightmaps/FFLDR_02.png" disablefullbright }
+brightmap texture FFLDR_03 { map "Textures/Brightmaps/FFLDR_03.png" disablefullbright }
+brightmap texture FFLDR_04 { map "Textures/Brightmaps/FFLDR_04.png" disablefullbright }
+brightmap texture FFLDR_05 { map "Textures/Brightmaps/FFLDR_05.png" disablefullbright }
+brightmap texture FFLDR_06 { map "Textures/Brightmaps/FFLDR_06.png" disablefullbright }
+brightmap texture FFLDR_07 { map "Textures/Brightmaps/FFLDR_07.png" disablefullbright }
+brightmap texture FFLDR_08 { map "Textures/Brightmaps/FFLDR_08.png" disablefullbright }
+brightmap texture FFLDR_09 { map "Textures/Brightmaps/FFLDR_09.png" disablefullbright }
+
+//Blackout Screen
+brightmap texture SS2_1270 { map "Textures/Brightmaps/SS2_1270.png" disablefullbright }
+
+//OK Screen
+brightmap texture CMP21_01 { map "Textures/Brightmaps/CMP21_01.png" disablefullbright }
+brightmap texture CMP21_02 { map "Textures/Brightmaps/CMP21_02.png" disablefullbright }
+brightmap texture CMP21_03 { map "Textures/Brightmaps/CMP21_03.png" disablefullbright }
+brightmap texture CMP21_04 { map "Textures/Brightmaps/CMP21_04.png" disablefullbright }
+brightmap texture CMP21_05 { map "Textures/Brightmaps/CMP21_05.png" disablefullbright }

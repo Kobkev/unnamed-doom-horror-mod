@@ -1,0 +1,13 @@
+[en default] 
+
+
+QUITMSG = "Leaving so soon...? Are you afraid?";
+TXT_YES = "Get me out of here!";
+TXT_NO = "I can keep going.";
+
+OB_SUICIDE = "%o couldn't handle the fear and killed themselves.";
+OB_FALLING = "%o fell to hard.";
+OB_WATER = "%o had %s lungs filled with water.";
+OB_LAVA = "%o was burned alive.";
+
+Obituary_Survivor_Suicide = "%o couldn't handle the fear and killed themselves.";

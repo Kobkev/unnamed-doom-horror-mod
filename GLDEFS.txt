@@ -1,0 +1,32 @@
+#INCLUDE "Brightmaps.txt"
+
+skybox "VaporSpace"
+{
+VS_front
+VS_right
+VS_back
+VS_left
+VS_top
+VS_bot
+}
+
+pointlight FLASHLIGHT2
+{
+        color 0.7 0.7 0.6
+        size 64
+        offset 0 20 0
+}
+
+pointlight FLASHLIGHT2_2
+{
+        color 0.7 0.7 0.6
+        size 56
+        offset 0 20 0
+}
+
+object FlashLBeam
+{
+           frame TNT1A { light FLASHLIGHT2 }
+           frame TNT1A { light FLASHLIGHT2_2 }
+}
+

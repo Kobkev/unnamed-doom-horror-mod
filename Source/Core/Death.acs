@@ -1,0 +1,73 @@
+#library "Death"
+#include "ZCommon.acs"
+
+#libdefine TID_PLAYERS 600
+
+Int BackupID = -1;
+
+Function bool KillerPicker (void)
+{
+	int NewKillerID;
+	bool Chosen = FALSE;
+	Int MaxPlayers = (TID_PLAYERS - 1) + Playercount();												 
+	Static Int TotalPlayers = 0;
+	If(TotalPlayers < MaxPlayers)
+	{
+		TotalPlayers = Maxplayers;
+	}
+	//hudmessage(s: "TotalPlayers ", i: TotalPlayers; HUDMSG_PLAIN, 902, 10, 0.5, 0.95, 0); //Debugging Purposes
+	NewKillerID = Random(TID_PLAYERS,TotalPlayers); //Random (600,601)
+	//hudmessage(s: "Killer ID: ", i: NewKillerID; HUDMSG_PLAIN, 100, 6, 0.5, 0.5, 0); //Debugging Purposes
+	int ingame = NewKillerID - TID_PLAYERS; 
+	//hudmessage(s: "Ingame: ", i: ingame; HUDMSG_PLAIN, 400, 6, 0.5, 0.6, 0); //Debugging Purposes
+	if ((ClassifyActor (NewKillerID) & ACTOR_ALIVE)  && (ClassifyActor (NewKillerID) & ACTOR_PLAYER) && PlayerInGame(ingame) && (!CheckActorInventory(NewKillerID ,"Eliminated")))// && (NewKillerID != NULL)) // Sometimes doesn't choose anything
+	{ 
+		
+		KillerEquipment(NewKillerID);
+		//ShowMurdererName(NewKillerID); // Debugging Purposes
+		ACS_Execute(999,0,NewKillerID);
+		GetMurderID (NewKillerID); // Makes a copy of the chosen killer ID for message purposes.
+		Chosen = TRUE;
+	} 
+	return Chosen;
+}
+
+Function void GetMurderID (int NewKillerID)
+{
+	BackupID = NewKillerID;
+}
+
+function void KillerEquipment (int NewKillerID)
+{
+	GiveActorInventory(NewKillerID, "KillerAxe", 1);
+}
+
+Function void GivePlayerID (void)
+{
+	Thing_ChangeTID(0, TID_PLAYERS + PlayerNumber());
+}
+
+Function void ShowMurdererName (int NewKillerID)
+{
+	NewKillerID = NewKillerID - TID_PLAYERS + 1;
+	//hudmessage(s: "ID after adding: ", i: ID; HUDMSG_PLAIN, 900, 10, 0.5, 0.85, 0); //Debugging Purposes
+	hudmessage(n: NewKillerID, s: " is the murderer"; HUDMSG_PLAIN, 1, 10, 0.5, 0.8, 0);
+}
+
+Function void RemoveAllWeapons (int activator)
+{
+	TakeActorInventory(activator, "Eliminated", 1);
+	//TakeActorInventory(activator, "KillerAxe", 1);
+	TakeActorInventory(activator, "PlasmaRifle", 1);
+	TakeActorInventory(activator, "Pistol", 1);
+	TakeActorInventory(activator, "Fist", 1);
+	TakeActorInventory(activator, "Chainsaw", 1);
+	TakeActorInventory(activator, "Shotgun", 1);
+	TakeActorInventory(activator, "Supershotgun", 1);
+	TakeActorInventory(activator, "Rocketlauncher", 1);
+	TakeActorInventory(activator, "Chaingun", 1);
+	TakeActorInventory(activator, "Bfg9000", 1);
+	TakeActorInventory(activator, "Berserk", 1);
+	SetActorProperty(activator, APROP_Health, 100);
+}
+

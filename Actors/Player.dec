@@ -1,0 +1,142 @@
+Actor Survivor : PlayerPawn
+{
+	Health 100
+	Player.MaxHealth 100
+	Player.DisplayName "Survivor"
+	Player.ForwardMove 1.2, 0.6
+	Player.SideMove 1.2, 0.6
+	Player.ViewHeight 50
+	Player.CrouchSprite "PLYC"
+	Player.ColorRange 112, 127
+	Player.DamageScreenColor "Black"
+	Player.StartItem "Flashlight"
+	Player.WeaponSlot 1, Flashlight, KillerFist
+	Player.WeaponSlot 2, NULL
+	Player.WeaponSlot 3, NULL
+	Player.WeaponSlot 4, NULL
+	Player.WeaponSlot 5, NULL
+	Player.WeaponSlot 6, NULL
+	Player.WeaponSlot 7, NULL
+	Player.JumpZ 7.0
+	PainChance 255 
+	-TELESTOMP
+	-NOTELEFRAG
+	States
+	{
+		Spawn:
+			PLAY A -1
+			Loop
+		See:
+			PLAY ABCD 4 
+			Loop
+		Missile:
+			PLAY E 12
+			Goto Spawn
+		Melee:
+			PLAY F 6
+			Goto Missile
+		Pain:
+			PLAY G 4 
+			PLAY G 4 A_Pain
+			Goto Spawn
+		Death:
+			PLAY H 0 A_PlayerSkinCheck("AltSkinDeath")
+		Death1:
+			PLAY H 10
+			PLAY I 10 A_PlayerScream
+			PLAY J 10 A_NoBlocking
+			PLAY KLM 10
+			PLAY N -1
+			Stop
+		XDeath:
+			PLAY O 0 A_PlayerSkinCheck("AltSkinXDeath")
+		XDeath1:
+			PLAY H 10
+			PLAY I 10 A_PlayerScream
+			PLAY J 10 A_NoBlocking
+			PLAY KLM 10
+			PLAY N -1
+			Stop
+		Death.ScaryDeath:
+			PLAY H 0 A_PlayerSkinCheck("AltSkinDeath")
+		Death.ScaryDeath1:
+			PLAY H 10 ACS_Execute(998,0)
+			PLAY I 10 A_PlayerScream
+			PLAY J 10 A_NoBlocking
+			PLAY KLM 10
+			PLAY N -1
+			Stop   
+		AltSkinDeath:
+			PLAY H 6
+			PLAY I 6 A_PlayerScream
+			PLAY JK 6
+			PLAY L 6 A_NoBlocking
+			PLAY MNO 6
+			PLAY P -1
+			Stop
+		AltSkinXDeath:
+			PLAY H 10
+			PLAY I 10 A_PlayerScream
+			PLAY J 10 A_NoBlocking
+			PLAY KLM 10
+			PLAY N -1
+			Stop
+		AltSkinDeath.ScaryDeath:
+			PLAY H 6 ACS_Execute(998,0)
+			PLAY I 6 A_PlayerScream
+			PLAY JK 6
+			PLAY L 6 A_NoBlocking
+			PLAY MNO 6
+			PLAY P -1
+			Stop
+	}
+}
+
+Actor Eliminated : Inventory
+{
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+	+INVENTORY.UNDROPPABLE
+}
+
+Actor OnGround : Inventory
+{
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+	+INVENTORY.UNDROPPABLE
+}
+
+Actor CrouchCheck : Inventory
+{
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+	+INVENTORY.UNDROPPABLE
+}
+
+actor StaminaMeter : Ammo // UNUSED DUE TO ONLINE ISSUES
+{
+  inventory.amount 5
+  inventory.maxamount 100
+  ammo.backpackamount 100
+  ammo.BackpackMaxAmount 100
+  states
+  {
+  Spawn:
+    AMMO A -1
+    stop
+  }
+}
+
+ACTOR NewFog replaces TeleportFog
+{
+  +NOBLOCKMAP
+  +NOTELEPORT
+  +NOGRAVITY
+  RenderStyle Add
+  States
+  {
+  Spawn:
+    TNT1 A 0 
+    Stop
+  }
+}

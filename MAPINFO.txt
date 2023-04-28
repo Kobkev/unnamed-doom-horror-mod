@@ -1,0 +1,18 @@
+defaultmap
+{
+	allowcrouch 
+	allowjump
+	checkswitchrange 
+	fallingdamage 
+	forcefallingdamage 
+	nointermission 
+	f1 = ""
+}
+
+map SMR01 "Closer to Fear"
+{
+	levelnum = 1
+	//music = D_SPOOK
+	sky1 = "VaporSpace", 0.0
+	next = map02
+}

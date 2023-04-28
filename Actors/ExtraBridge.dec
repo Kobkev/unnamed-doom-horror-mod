@@ -1,0 +1,5 @@
+ACTOR InvisibleBridge4 : InvisibleBridge 5066
+{
+  Radius 4 // Or args[0]
+  Height 4 // Or args[1]
+}

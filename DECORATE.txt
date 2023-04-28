@@ -1,0 +1,4 @@
+#Include "actors/Player.dec"
+#Include "actors/Killer.dec"
+#Include "actors/Flashlight.dec"
+#Include "actors/ExtraBridge.dec"

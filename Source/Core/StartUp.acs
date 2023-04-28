@@ -1,0 +1,27 @@
+#library "StartUp"
+
+Script "GameSettings" Open
+{
+	While(1)
+	{
+		Consolecommand("sv_forcegldefaults true");
+		Consolecommand("sv_disallowspying true");
+		Consolecommand("sv_allowcrouch true");
+		Consolecommand("sv_disallowsuicide true");
+		Consolecommand("sv_noautomapallies true");
+		Consolecommand("sv_noidentifytarget true");
+		Consolecommand("sv_nocoopinfo true");
+		Consolecommand("sv_weapondrop false");
+		Consolecommand("sv_noautomap true");
+		Consolecommand("sv_nomedals true");
+		Consolecommand("sv_noarmor true");
+		Consolecommand("sv_lmscountdowntime 4");
+		Consolecommand("compat_limited_airmovement true");
+		Consolecommand("compat_nocrosshair true");
+		
+		ConsoleCommand("dmflags 8");
+		
+		Delay(1);
+	}
+	Delay(1);
+}

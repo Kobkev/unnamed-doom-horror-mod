@@ -1,0 +1,8 @@
+//statusbar normal, forcescaled //UNUSED GIVEN THERES NO POINT IN JUST HAVING AN HP BAR AND ISSUES WITH STAMINA FUNCTIONING DURING ONLINE PLAY
+
+/*{
+	DrawBar "HealthFu", "HealthEm", Health, horizontal, -50, 165;
+	DrawBar "StaminFu", "HealthEm", StaminaMeter, horizontal, -50, 180; // UNUSED TO TO ISSUES WITH ONLINE
+	//DrawImage "StaminWd", -48, 174; // UNUSED TO TO ISSUES WITH ONLINE
+	DrawImage "HealthWd", -48, 159;
+}*/

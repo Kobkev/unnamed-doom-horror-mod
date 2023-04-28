@@ -1,0 +1,200 @@
+#library "Core"
+
+#include "ZCommon.acs"
+#import "Death.acs"
+
+// Global Variables for gameflow
+int killer_active = 0; 
+bool tagP = FAlSE;
+bool tagD = FALSE;
+bool JustDied = FALSE;
+bool JustDisconnected = FALSE;
+bool killerTimeOut = FALSE;
+
+int Time = 1000;
+
+Script "GiveID-TextLogic-KillerTimerPopup" ENTER
+{
+	//RemoveAllWeapons(ActivatorTID());
+	//TakeInventory("Armor", 1000);
+ 	GivePlayerID();
+	Delay(1);
+	
+	While(true)
+	{
+		if(Time == 0)
+		{
+			Delay(35);
+			//hudmessage(s: "Killer ID: ", i: BackupID; HUDMSG_PLAIN, 100, 6, 0.5, 0.5, 0); //Debugging Purposes
+			//hudmessage(s: "PlayerNumber: ", i: PlayerNumber(); HUDMSG_PLAIN, 101, 6, 0.5, 0.4, 0); //Debugging Purposes
+			if (BackupID - TID_PLAYERS == PlayerNumber())
+			{
+				Setfont("BigFont");
+				Hudmessage(s:"You've been possesed! Go and kill!!"; HUDMSG_FADEOUT, 2003, CR_RED, 0.5, 0.55, 1.5, 1.0);
+				SetFont("SmallFont");
+			}
+			else
+			{
+				Setfont("BigFont");
+				Hudmessage(s:"A new survivor has been possesed!"; HUDMSG_FADEOUT, 2004, CR_RED, 0.5, 0.45, 1.5, 1.0);
+				SetFont("SmallFont");
+			}
+		}
+		
+		if(killerTimeOut == TRUE)
+		{
+			if (BackupID - TID_PLAYERS == PlayerNumber())
+			{
+				ACS_Execute(998,0);
+				Thing_Damage(BackupID,200);
+				killerTimeOut = False;
+			}
+		}
+		Delay(1);
+	}
+}
+
+script "Game Loop" OPEN
+{
+	if(GameType() == GAME_TITLE_MAP) Terminate;
+
+	if((Playercount() <= 2 && JustDied == TRUE) || (Playercount() <= 2 && JustDisconnected == TRUE)) // This gets Rid of the counter if the killer dies or disconnects with only 2 players left.
+	{	
+		Terminate;
+	}
+	while(Playercount() < 2 && GetGameModeState() != 2)
+	{
+		hudmessage(s:"Wating for Players..."; HUDMSG_PLAIN, 2000, 2, 0.5, 0.9, 0.1);
+		Delay(1);
+	}
+	if(tagP == true) // A flag in the case that the last player who died was the killer
+	{
+		Setfont("BigFont");
+		hudmessage(s:"The killer is done for... Time for a new one!"; HUDMSG_PLAIN, 1, 2, 0.5, -4, 5);
+		Setfont("SmallFont");
+		Delay(35*5); //Set a delay before checking for a new killer.
+		tagP = FALSE;
+	}
+	if(tagD == true) // A flag in the case that the last player who disconnected was the killer
+	{
+		Setfont("BigFont");
+		hudmessage(s:"The killer couldn't deal with the pressure and left... Time for a new one!"; HUDMSG_PLAIN, 1, 2, 0.5, -4, 5);
+		Setfont("SmallFont");
+		Delay(35*5); //Set a delay before checking for a new killer.
+		tagP = FALSE;
+	}
+	if(PlayerCount() >= 2 && killer_active == 0 && GetGameModeState() == 2)
+	{
+		for (Time = 5; time >= 0; time--)
+		{
+			if(playerCount() < 2)
+			{
+				PrintBold(s:"Not enought Players anymore!");
+				Delay(35*3);
+				//Exit_Normal(0);
+				restart;
+			}
+			Setfont("BigFont");
+			hudmessage(s:"Next killer will be chosen in... ", d:Time, s:" seconds"; HUDMSG_PLAIN, 1, 2, 0.5, -4, 1.1);
+			Setfont("SmallFont");
+			Delay(35);
+		}
+		while(!KillerPicker()) Delay(1); 
+		killer_active = 1;
+		
+		Delay(1);
+		restart;
+	}		
+	else
+	{
+	Delay(1);
+	Restart;
+	}
+	Delay(1);
+	restart;
+}
+
+script "Check on deaths of player and killer" DEATH
+{	
+	GiveActorInventory(ActivatorTID(), "Eliminated", 1);
+	if(CheckInventory("KillerAxe")) // Checks the inventory of the player that just died to verify if it was the killer.
+	{
+		ACS_Terminate(999,0);
+		hudmessage(s: ""; HUDMSG_PLAIN, 1000, 2, 0.5, -4, 1.0);
+		TakeActorInventory(ActivatorTID(), "KillerAxe", 1);
+		Delay(1);
+		tagP = TRUE;
+		JustDied = TRUE;
+		killer_active = 0;	
+	}
+	
+	if(PlayerCount() == 3)
+	{
+		
+		SetMusic("SHIV_MM", 0);
+	}
+}
+
+script "Check if killer disconnected" (int player) DISCONNECT
+{	
+	if(CheckActorInventory(player,"KillerAxe")) // Checks the inventory of the player that disconnected to verify if it was the killer.
+	{
+		ACS_Terminate(999,0);
+		hudmessage(s: "" ;HUDMSG_PLAIN, 1000, 2, 0.5, -4, 1.0);
+		PrintBold(s:"Killer ", n: player, s:" has left the building!");
+		TakeActorInventory(player, "KillerAxe", 1);
+		Delay(1);
+		tagD = TRUE;
+		JustDisconnected = TRUE;
+		killer_active = 0;	
+	}
+}
+
+/*script "Respawned Players" RESPAWN
+{
+	//TakeInventory("Armor", 1000);
+	//TakeActorInventory(ActivatorTID(), "KillerFist", 1);
+	//RemoveAllWeapons(ActivatorTID());
+}*/
+
+script 999 (int ID) // Initiate the killers timer - Stops timer when game is not in a InProgress State
+{
+	for (int KTime = 110 + ((PlayerCount() / 2) * 10); KTime >= 0; KTime--)
+	{
+		if(GetGameModeState() != 2)
+		{
+			Terminate;
+		}
+		//hudmessage(s: "Killer ID: ", i: ID; HUDMSG_PLAIN, 100, 6, 0.5, 0.5, 0); //Debugging Purposes
+		SetFont("BigFont");
+		if(KTime%60 >= 10)
+		{
+			hudmessageBold(s: "Killer Time - ",d:(KTime/60)%60, s: ":", d:KTime%60; HUDMSG_PLAIN, 1000, 6, 0.05, 0.8, 1.0);
+		}
+		else
+		{
+			hudmessageBold(s: "Killer Time - ",d:(KTime/60)%60, s: ":0", d:KTime%60; HUDMSG_PLAIN, 1000, 6, 0.05, 0.8, 1.0);
+		}
+		SetFont("SmallFont");
+		if(KTime == 0)
+		{
+			killerTimeOut = TRUE;
+		}
+	Delay(35);
+	}
+	Terminate;
+}
+
+script 998 (void) net Clientside
+{
+     SetHudSize(1280, 1024, 1);
+	 SetFont("EDGAR");
+	 LocalAmbientSound("piratas1",127);
+	 HudMessage(s:"A"; HUDMSG_FADEOUT, 666, CR_UNTRANSLATED, 0.5, 0.5, 1.0, 0.5); 
+	 fadeto (0,0,0,1.0,0.0);
+	 Delay(35);
+	 fadeto (0,0,0,0.0,5.0);
+     delay(1);
+	 Terminate;
+}
+

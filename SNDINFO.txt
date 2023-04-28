@@ -1,0 +1,13 @@
+piratas1 PIRATAS
+
+
+flashlight/on	fshlite1
+flashlight/off	fshlite2
+Fist/Swing DSFistGo
+
+weapons/axecut SPLICE
+weapons/axebang CLANG
+weapons/axeswing SWISH
+
+conveyor Conveyor
+$AMBIENT 01 Conveyor POINT  CONTINUOUS 1.0

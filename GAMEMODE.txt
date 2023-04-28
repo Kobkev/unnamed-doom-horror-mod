@@ -1,0 +1,5 @@
+LastManStanding
+{
+	addflag DONTPRINTPLAYERSLEFT
+	removeflag PLAYERSEARNFRAGS
+}

@@ -1,0 +1,74 @@
+#library "Sprint" //UNUSED DUE TO NOT BEING COMPATIBLE WITH ONLINE PLAY
+
+#include "zcommon.acs"
+#import "Death.acs"
+
+#define maxstamina 100
+#libdefine PLAYER_VIEWHEIGHT 45
+
+Script "Sprint" ENTER Clientside
+{
+	int buttons;
+	GiveActorInventory(ActivatorTID(), "StaminaMeter", 100);
+	While(true)
+	{
+		buttons = GetPlayerInput(PlayerNumber(),INPUT_BUTTONS);
+		if(GetActorZ (ActivatorTID()) - GetActorFloorZ (ActivatorTID())== 0.0)
+		{
+			GiveActorInventory(ActivatorTID(), "OnGround", 1);
+		}
+		else
+		{
+			TakeActorInventory(ActivatorTID(), "OnGround", 1);
+		}
+		if(GetActorViewHeight(ActivatorTID()) <= PLAYER_VIEWHEIGHT << 16)
+		{
+			GiveActorInventory(ActivatorTID(), "CrouchCheck", 1);
+		}
+		else
+		{
+			TakeActorInventory(ActivatorTID(), "CrouchCheck", 1);
+		}
+		
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		If(buttons &BT_SPEED && CheckInventory("OnGround") && !CheckInventory("CrouchCheck"))
+		{
+			If(CheckActorInventory(ActivatorTID(),"StaminaMeter")) //If the player has stamina proceed
+			{
+				SetActorProperty(0,APROP_SPEED,1.7); 
+				If(buttons&(BT_FORWARD|BT_BACK|BT_MOVELEFT|BT_MOVERIGHT)){ TakeActorInventory(ActivatorTID(),"StaminaMeter",1); Delay(1); } //If they are moving, take away stamina
+			}
+			Else
+			{
+				SetActorProperty(0,APROP_SPEED,1.0); //If no stamina, then back to normal speed
+				delay(52);
+				GiveActorInventory(ActivatorTID(),"StaminaMeter",1);
+			}
+		}
+		else If(GetPlayerInput(PlayerNumber(),INPUT_BUTTONS)&BT_JUMP) 
+		{
+			if(!CheckInventory("OnGround") && CheckActorInventory(ActivatorTID(),"StaminaMeter") >= 7)
+			{
+				TakeActorInventory(ActivatorTID(),"StaminaMeter",7);
+				GiveActorInventory(ActivatorTID(), "OnGround", 1);
+				Delay(20);
+			}
+			if(CheckActorInventory(ActivatorTID(),"StaminaMeter") < 7 && CheckInventory("OnGround"))
+			{
+				HudMessageBold(s: "NOT ENOUGH STAMINA "; HUDMSG_PLAIN, 5,CR_UNTRANSLATED,0.05,0.75,1.0);
+				
+			}
+		}
+		Else 
+		{
+			SetActorProperty(0,APROP_SPEED,1.0);
+			If(CheckActorInventory(ActivatorTID(),"StaminaMeter")<maxstamina){Delay(15); GiveActorInventory(ActivatorTID(),"StaminaMeter",1); } //If stamina under max stamina, add stamina
+		}
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		If(CheckActorInventory(ActivatorTID(),"StaminaMeter") > 7) { SetActorProperty(0,APROP_JumpZ,7.0); Delay(1); }
+		if(CheckActorInventory(ActivatorTID(),"StaminaMeter") < 7) { SetActorProperty(0,APROP_JumpZ,0); Delay(1); }
+		//SetFont("BigFont");
+		//HudMessage(s: "Stamina: ", i:CheckActorInventory(ActivatorTID(),"StaminaMeter"); HUDMSG_PLAIN, 5,CR_UNTRANSLATED,0.05,0.75,0); //Show the player's current stamina on screen, can be removed
+		Delay(1); //Wait 1 tic and restart
+   }
+}
