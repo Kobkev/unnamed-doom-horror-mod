@@ -2,4 +2,9 @@ LastManStanding
 {
 	addflag DONTPRINTPLAYERSLEFT
 	removeflag PLAYERSEARNFRAGS
+
+	GameSettings
+    {
+		sv_nomonsters = true;
+	}
 }
