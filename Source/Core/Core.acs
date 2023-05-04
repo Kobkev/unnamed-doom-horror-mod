@@ -57,6 +57,8 @@ Script "GiveID-TextLogic-KillerTimerPopup" ENTER
 script "Game Loop" OPEN
 {
 	if(GameType() == GAME_TITLE_MAP) Terminate;
+	
+	if(GetCurrentGamemode() != "LastManStanding") SetCurrentGamemode("LastManStanding");
 
 	if((Playercount() <= 2 && JustDied == TRUE) || (Playercount() <= 2 && JustDisconnected == TRUE)) // This gets Rid of the counter if the killer dies or disconnects with only 2 players left.
 	{	
